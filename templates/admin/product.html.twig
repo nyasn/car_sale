@@ -1,0 +1,259 @@
+{% extends 'base_bo.html.twig' %}
+
+{% block title %} {{ name }} {% endblock %}
+
+{% block body %}
+    <h1 class="h3 mb-2 text-gray-800">Les produits</h1>
+    <a href="#" data-toggle="modal" data-target="#ajoutmodal" class="btn btn-primary btn-icon-split">
+                    <span class="icon text-white-50">
+                      <i class="fas fa-plus"></i>
+                    </span>
+        <span class="text">Créer produit</span>
+    </a>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Listes produits</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th>Titre</th>
+                        <th>Déscription</th>
+                        <th>Quantité</th>
+                        <th>Fournisseur</th>
+                        <th>Prix ttc</th>
+                        <th>Genre</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for product in products  %}
+                        <tr>
+                            <td>
+                                {{ product.titre }}
+                            </td>
+                            <td>
+                                {{ product.description }}
+                            </td>
+                            <td>
+                                {{ product.quantite }}
+                            </td>
+                            <td>
+                                {{ product.fournisseur }}
+                            </td>
+                            <td>
+                                {{ product.prix }}
+                            </td>
+
+                            <td>
+                                {{ product.genre }}
+                            </td>
+                            <td data-label="Actions" class="actions">
+                                <a class="text-primary action-edit" title="" href="#"
+                                   data-id="{{ product.id }}"
+                                   data-titre="{{ product.titre }}"
+                                   data-description="{{ product.description }}"
+                                   data-quantite="{{ product.quantite }}"
+                                   data-prix="{{ product.prix }}"
+                                   data-genre="{{ product.genre }}"
+                                   target="_self" onclick="openEdit(event)"><i class="fa fa-edit"></i> </a>
+
+                                <a class="text-danger action-delete" title="" href="{{ path('delete_product', {'id': product.id }) }}" onclick="return confirm('Voulez-vous vraiment supprimer ce fournisseur ?')"><i class="fa fa-trash"></i> </a>
+
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="ajoutmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+        <div class="modal-dialog" role="document">
+            <form action="" method="post" id="ajoutprovider">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Ajout</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="name">Titre</label>
+                            <input type="text" class="form-control" id="titre" aria-describedby="emailHelp" name ="name" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Quantiter</label>
+                            <input type="number" class="form-control" id="qte" aria-describedby="emailHelp" name ="name" required />
+                        </div>
+                        <div class="form-group">
+                            <label>Fournisseur</label>
+                            <select class="custom-select" id="mySelect" onchange="isComplete()">
+                                {% for fournisseur in fournisseurs %}
+                                        <option value="{{ fournisseur.id }}">{{ fournisseur.name }} </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Prix ttc</label>
+                            <input type="number" class="form-control" id="prix" aria-describedby="emailHelp"  required />
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Genre</label>
+                            <input type="text" class="form-control" id="genre" aria-describedby="emailHelp" name ="name" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Déscriptions</label>
+                            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-primary" type="submit" >Ajouter</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+    </div>
+
+    <div class="modal fade" id="editmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+        <div class="modal-dialog" role="document">
+            <form action="" method="post" id="ajoutprovider_e">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Modification</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden"  id="id"  />
+                        <div class="form-group">
+                            <label for="name">Titre</label>
+                            <input type="text" class="form-control" id="titre_e" aria-describedby="emailHelp" name ="name" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Quantiter</label>
+                            <input type="number" class="form-control" id="qte_e" aria-describedby="emailHelp" name ="name" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Prix ttc</label>
+                            <input type="number" class="form-control" id="prix_e" aria-describedby="emailHelp"  required />
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Genre</label>
+                            <input type="text" class="form-control" id="genre_e" aria-describedby="emailHelp" name ="name" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Déscriptions</label>
+                            <textarea class="form-control" id="description_e" name="description" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-primary" type="submit" >Modifier</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block javascripts %}
+    <script>
+
+        $(document).ready(function() {
+            $('#dataTable').DataTable();
+        });
+        $("#ajoutprovider").submit(function(e) {
+            var route = "{{ path('add_product') }}";
+
+            const titre = $('#titre').val();
+            const prix = $('#prix').val();
+            const qte = $('#qte').val();
+            const genre = $('#genre').val();
+            const description=$('#description').val()
+            const fournisseur = $('#mySelect').val();
+            let data = new FormData();
+            data.append('titre',titre);
+            data.append('prix',prix);
+            data.append('description',description);
+            data.append('qte',qte);
+            data.append('genre',genre);
+            data.append('fournisseur',fournisseur);
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+
+            $.ajax({
+                type: "POST",
+                url: route,
+                data: data,
+                cache:false,
+                contentType: false,
+                processData: false,
+                success: function(data)
+                {
+                    console.log(data);
+                    if(data.status) window.location.reload();
+                }
+            });
+        });
+
+        function openEdit(e) {
+            e.preventDefault();
+            $("#id").val(getValData(e.target,'id'));
+            $("#titre_e").val(getValData(e.target,'titre'));
+            $("#description_e").val(getValData(e.target,'description'));
+            $("#qte_e").val(getValData(e.target,'quantite'));
+            $("#prix_e").val(getValData(e.target,'prix'));
+            $("#genre_e").val(getValData(e.target,'genre'));
+            $('#editmodal').modal('show');
+        }
+
+        $("#ajoutprovider_e").submit(function(e) {
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var route = "{{ path('edit_product') }}";
+
+            const titre = $('#titre_e').val();
+            const id = $('#id').val();
+            const prix = $('#prix_e').val();
+            const qte = $('#qte_e').val();
+            const genre = $('#genre_e').val();
+            const description=$('#description_e').val()
+            let data = new FormData();
+            data.append('titre',titre);
+            data.append('id',id);
+            data.append('prix',prix);
+            data.append('description',description);
+            data.append('qte',qte);
+            data.append('genre',genre);
+            $.ajax({
+                type: "POST",
+                url: route,
+                data: data,
+                cache:false,
+                contentType: false,
+                processData: false,
+                success: function(data)
+                {
+                    console.log(data);
+                    if(data.status) window.location.reload();
+                }
+            });
+        });
+        const getValData = (target,data) => {
+            return $(target).closest('a').attr('data-'+data);
+        };
+    </script>
+{% endblock %}

@@ -20,10 +20,6 @@ class User extends BaseUser
      */
     protected $id;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Commande::class, mappedBy="user", orphanRemoval=true)
-     */
-    private $commandes;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -55,6 +51,21 @@ class User extends BaseUser
      */
     private $updated_at;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Commande::class, mappedBy="user")
+     */
+    private $User;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Commande::class, mappedBy="User")
+     */
+    private $no;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Commande::class, mappedBy="User")
+     */
+    private $commandes;
+
     public function __construct()
     {
         parent::__construct();
@@ -62,36 +73,10 @@ class User extends BaseUser
 
         $this->commandes = new ArrayCollection();    }
 
-    /**
-     * @return Collection|Commande[]
-     */
-    public function getCommandes(): Collection
-    {
-        return $this->commandes;
-    }
 
-    public function addCommande(Commande $commande): self
-    {
-        if (!$this->commandes->contains($commande)) {
-            $this->commandes[] = $commande;
-            $commande->setUser($this);
-        }
 
-        return $this;
-    }
 
-    public function removeCommande(Commande $commande): self
-    {
-        if ($this->commandes->contains($commande)) {
-            $this->commandes->removeElement($commande);
-            // set the owning side to null (unless already changed)
-            if ($commande->getUser() === $this) {
-                $commande->setUser(null);
-            }
-        }
 
-        return $this;
-    }
 
     public function getLastName(): ?string
     {
@@ -164,4 +149,37 @@ class User extends BaseUser
 
         return $this;
     }
+
+    /**
+     * @return Collection|Commande[]
+     */
+    public function getCommandes(): Collection
+    {
+        return $this->commandes;
+    }
+
+    public function addCommande(Commande $commande): self
+    {
+        if (!$this->commandes->contains($commande)) {
+            $this->commandes[] = $commande;
+            $commande->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommande(Commande $commande): self
+    {
+        if ($this->commandes->contains($commande)) {
+            $this->commandes->removeElement($commande);
+            // set the owning side to null (unless already changed)
+            if ($commande->getUser() === $this) {
+                $commande->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+
 }

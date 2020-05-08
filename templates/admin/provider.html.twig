@@ -1,0 +1,167 @@
+{% extends 'base_bo.html.twig' %}
+
+{% block title %} {{ name }} {% endblock %}
+
+{% block body %}
+    <h1 class="h3 mb-2 text-gray-800">Les fournisseurs</h1>
+    <a href="#" data-toggle="modal" data-target="#ajoutmodal" class="btn btn-primary btn-icon-split">
+                    <span class="icon text-white-50">
+                      <i class="fas fa-plus"></i>
+                    </span>
+        <span class="text">Créer fournisseur</span>
+    </a>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Listes des fournisseurs</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Nom fournisseur</th>
+                            <th>Déscription</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for fournisseur in fournisseurs  %}
+                        <tr>
+                            <td>
+                                {{ fournisseur.name }}
+                            </td>
+                            <td>
+                                {{ fournisseur.description }}
+                            </td>
+                            <td data-label="Actions" class="actions">
+
+
+                                <a class="text-primary action-edit" title="" href="#" data-id="{{ fournisseur.id }}" data-name="{{ fournisseur.name }}"
+                                   data-description="{{ fournisseur.description }}" target="_self" onclick="openEdit(event)"><i class="fa fa-edit"></i> </a>
+
+                                <a class="text-danger action-delete" title="" href="{{ path('delete_fournisseur', {'id': fournisseur.id }) }}" onclick="return confirm('Voulez-vous vraiment supprimer ce fournisseur ?')"><i class="fa fa-trash"></i> </a>
+
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="ajoutmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+            <div class="modal-dialog" role="document">
+                <form action="" method="post" id="ajoutprovider">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Ajout</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="name">Nom fournisseur</label>
+                            <input type="text" class="form-control" id="name" aria-describedby="emailHelp" name ="name" placeholder="Enter email" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Déscriptions</label>
+                            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-primary" type="submit" >Ajouter</button>
+                    </div>
+                </div>
+                </form>
+            </div>
+
+
+    </div>
+
+    <div class="modal fade" id="editmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+        <div class="modal-dialog" role="document">
+            <form action="" method="post" id="ajoutprovider_e">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Modification</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="name">Nom fournisseur</label>
+                            <input type="text" class="form-control" id="name_e" aria-describedby="emailHelp" name ="name_e"  required />
+                            <input type="hidden"  id="id"  />
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Déscriptions</label>
+                            <textarea class="form-control" id="description_e" name="description_e" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-primary" type="submit" >Modifier</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block javascripts %}
+    <script>
+        $("#ajoutprovider").submit(function(e) {
+            var route = "{{ path('add_fournisseur') }}";
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+
+            $.ajax({
+                type: "POST",
+                url: route,
+                data: {name:$('#name').val(),description:$('#description').val()}, // serializes the form's elements.
+                success: function(data)
+                {
+                    console.log(data);
+                    if(data.status)
+                        window.location.reload();
+                }
+            });
+        });
+
+        function openEdit(e) {
+            e.preventDefault();
+            $("#id").val(getValData(e.target,'id'));
+            $("#name_e").val(getValData(e.target,'name'));
+            $("#description_e").val(getValData(e.target,'description'));
+            $('#editmodal').modal('show');
+        }
+
+        $("#ajoutprovider_e").submit(function(e) {
+            var route = "{{ path('edit_fournisseur') }}";
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+
+            $.ajax({
+                type: "POST",
+                url: route,
+                data: {name:$('#name_e').val(),description:$('#description_e').val(),id:$("#id").val()}, // serializes the form's elements.
+                success: function(data)
+                {
+                    console.log(data);
+                    if(data.status) window.location.reload();
+                }
+            });
+        });
+        const getValData = (target,data) => {
+            return $(target).closest('a').attr('data-'+data);
+        };
+    </script>
+{% endblock %}

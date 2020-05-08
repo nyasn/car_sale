@@ -47,4 +47,14 @@ class ProduitRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findAllProduct(): array
+    {
+        $entityManager = $this->getEntityManager();
+        $dql = "SELECT p.titre,p.id , p.description, p.created_at, p.quantite , p.prix, p.genre, f.name as fournisseur
+            FROM App\Entity\Produit p
+            LEFT JOIN App\Entity\Fournisseur f with f.id = p.fournisseur
+            GROUP BY p.id";
+        return $entityManager->createQuery($dql)->getResult();
+    }
 }

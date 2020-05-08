@@ -34,11 +34,7 @@ class Commande
      */
     private $number_order;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="commandes")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $user;
+
 
     /**
      * @ORM\ManyToOne(targetEntity=Produit::class, inversedBy="commandes")
@@ -50,6 +46,12 @@ class Commande
      * @ORM\Column(type="integer", nullable=true)
      */
     private $quantity;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="commandes")
+     */
+    private $User;
+
 
     public function getId(): ?int
     {
@@ -92,18 +94,6 @@ class Commande
         return $this;
     }
 
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
     public function getProduit(): ?Produit
     {
         return $this->produit;
@@ -127,4 +117,18 @@ class Commande
 
         return $this;
     }
+
+    public function getUser(): ?User
+    {
+        return $this->User;
+    }
+
+    public function setUser(?User $User): self
+    {
+        $this->User = $User;
+
+        return $this;
+    }
+
+
 }
