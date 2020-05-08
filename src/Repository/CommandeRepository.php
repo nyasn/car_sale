@@ -47,4 +47,32 @@ class CommandeRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function getAllcommande():array
+    {
+        $entityManager = $this->getEntityManager();
+        $dql = "SELECT 
+            c.id,
+            u.last_name as nom,
+            u.first_name as prenom,
+            u.address ,
+            u.phone,
+            u.email,
+            p.titre as produit, 
+            c.quantity,
+            p.prix,
+            p.prix*c.quantity as total,
+            f.name as fournisseur,
+            c.created_at, 
+            c.number_order 
+        FROM App\Entity\Commande c
+        LEFT JOIN App\Entity\User u with u.id = c.User
+        LEFT JOIN App\Entity\Produit p with p.id = c.produit
+        LEFT JOIN App\Entity\Fournisseur f with f.id = p.fournisseur
+        GROUP BY c.id";
+
+        //$query = $entityManager->createQuery();
+
+        return $entityManager->createQuery($dql)->getResult();
+    }
 }

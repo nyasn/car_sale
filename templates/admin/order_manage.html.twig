@@ -1,0 +1,81 @@
+{% extends 'base_bo.html.twig' %}
+
+{% block title %} {{ name }} {% endblock %}
+
+{% block body %}
+    <h1 class="h3 mb-2 text-gray-800">Les Commandes</h1>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Listes produits</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th>Numero</th>
+                        <th>Client</th>
+                        <th>Phone/email</th>
+                        <th>Adresse client</th>
+                        <th>Fournisseur</th>
+                        <th>Produit</th>
+                        <th>Quantité</th>
+                        <th>Prix unitaire</th>
+                        <th>Total</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for commande in commandes  %}
+                        <tr>
+                            <td>
+                                {{ commande.number_order }}
+                            </td>
+                            <td>
+                                {{ commande.nom }} {{ commande.prenom }}
+                            </td>
+                            <td>
+                                {{ commande.phone }} <br> {{ commande.email }}
+                            </td>
+                            <td>
+                                {{ commande.address }}
+                            </td>
+                            <td>
+                                {{ commande.fournisseur }}
+                            </td>
+                            <td>
+                                {{ commande.produit }}
+                            </td>
+                            <td>
+                                {{ commande.quantity }}
+                            </td>
+                            <td>
+                                {{ commande.prix }}
+                            </td>
+
+                            <td>
+                                {{ commande.total }}
+                            </td>
+
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+
+{% block javascripts %}
+    <script>
+
+        $(document).ready(function() {
+            $('#dataTable').DataTable();
+        });
+
+    </script>
+{% endblock %}

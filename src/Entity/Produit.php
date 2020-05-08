@@ -46,19 +46,10 @@ class Produit
     private $quantite;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $marque;
-
-    /**
      * @ORM\Column(type="float", nullable=true)
      */
     private $prix;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $type;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -146,17 +137,7 @@ class Produit
         return $this;
     }
 
-    public function getMarque(): ?string
-    {
-        return $this->marque;
-    }
 
-    public function setMarque(?string $marque): self
-    {
-        $this->marque = $marque;
-
-        return $this;
-    }
 
     public function getPrix(): ?float
     {
@@ -170,17 +151,6 @@ class Produit
         return $this;
     }
 
-    public function getType(): ?string
-    {
-        return $this->type;
-    }
-
-    public function setType(?string $type): self
-    {
-        $this->type = $type;
-
-        return $this;
-    }
 
     public function getGenre(): ?string
     {
