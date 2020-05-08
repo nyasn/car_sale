@@ -25,7 +25,6 @@ class UserController extends AbstractController
     private $tokenManager;
     private $session;
     private $profileRepository;
-    private $cartService;
     private $userManager;
     private $entityManager;
     private  $translator;
@@ -103,7 +102,7 @@ class UserController extends AbstractController
      */
     public function renderLogin(array $data)
     {
-        return $this->render('fo/auth/login.html.twig', $data);
+        return $this->render('auth/login.html.twig', $data);
     }
 
     public function checkConnected()

@@ -1,0 +1,55 @@
+{% extends 'base_fo.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block body %}
+<!--content-->
+<div class="banner-top">
+	<div class="container">
+		<h3 >Accueil</h3>
+		<div class="clearfix"> </div>
+	</div>
+</div>
+{% if list_mark_by_product is defined %}
+	{% for mark_by_product in list_mark_by_product %}
+	<div class="product">
+		<div class="container">
+			<div class="spec ">
+				<h3>{{ mark_by_product.marks.name }}</h3>
+				<div class="ser-t">
+					<b></b>
+					<span><i></i></span>
+					<b class="line"></b>
+				</div>
+			</div>
+				<div class=" con-w3l">
+					{% if mark_by_product.products is defined  and mark_by_product.products|length > 0 %}
+						{% for product in mark_by_product.products %}
+						<div class="col-md-3 pro-1">
+							<div class="col-m">
+								<img src="{{ asset('/assets/fo/images/vp1.jpg') }}" class="img-responsive" alt="">
+								<div class="mid-1">
+									<div class="women">
+										<h6><a href="#">{{ product.titre }}</a></h6>							
+									</div>
+									<div class="mid-2">
+										<p><em class="item_price">$ {{ product.prix }}</em></p>
+											<div class="block">
+										</div>
+										<div class="clearfix"></div>
+									</div>
+										<div class="add">
+										<button class="btn btn-danger my-cart-btn my-cart-b" data-id="{{ product.id }}" data-name="{{ product.titre }}" data-summary="{{ product.description }}" data-price="{{ product.prix }}" data-quantity="1" data-image="{{ asset('/assets/fo/images/vp1.jpg') }}">Ajouter panier</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						{% endfor %}
+					{% endif %}
+				<div class="clearfix"></div>
+				</div>
+		</div>
+	</div>
+	{% endfor %}
+{% endif %}
+{% endblock %}

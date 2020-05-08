@@ -17,49 +17,66 @@ class RegistrationFormType extends AbstractType
         $builder
             ->add('last_name', null,
                 [
-                    'label' => 'app.auth.last_name',
+                    'label' => 'Nom',
                     'attr' => [
                         'class'=>'form-control required-input',
-                        'placeholder' => 'app.auth.last_name'
+                        'placeholder' => 'Nom'
                     ]
                 ])
             ->add('first_name', null,
                 [
-                    'label' => 'app.auth.first_name',
+                    'label' => 'Prénom(s)',
                     'attr' => [
                         'class'=>'form-control required-input',
-                        'placeholder' => 'app.auth.first_name'
+                        'placeholder' => 'Prénom(s)'
+                    ]
+                ])
+            ->add('address', null,
+                [
+                    'label' => 'Adresse',
+                    'attr' => [
+                        'class'=>'form-control required-input',
+                        'placeholder' => 'Adresse'
+                    ]
+                ])
+            ->add('phone', null,
+                [
+                    'label' => 'Téléphone',
+                    'attr' => [
+                        'class'=>'form-control required-input',
+                        'placeholder' => 'numéro téléphone'
                     ]
                 ])
             ->add('username', null,
                 [
-                    'label' => 'app.auth.username',
+                    'label' => 'Identifiant',
                     'attr' => [
                         'class'=>'form-control required-input',
-                        'placeholder' => 'app.auth.username'
+                        'placeholder' => 'Identifiant'
                     ]
                 ])
             ->add('email', EmailType::class,
                 [
-                    'label' => 'app.auth.email',
+                    'label' => 'Adresse email',
                     'attr' => [
                         'class'=>'form-control required-input',
-                        'placeholder' => 'app.auth.email'
+                        'placeholder' => 'Adresse email'
                     ]
                 ])
-            ->add('plainPassword', RepeatedType::class, [
-                'type' => PasswordType::class,
-                'options' => [
+            ->add('password', PasswordType::class, 
+                [
                     'attr' => [
-                        'autocomplete' => 'new-password',
                         'class'=>'form-control required-input',
-                        'placeholder' => 'app.auth.password'
+                        'placeholder' => 'Mot de passe'
                     ]
-                ],
-                'first_options' => ['label' => 'app.auth.password',],
-                'second_options' => ['label' => 'app.auth.password_confirmation'],
-                'invalid_message' => 'fos_user.password.mismatch',
-            ])
+                ])
+            ->add('plainPassword', PasswordType::class, 
+                [
+                    'attr' => [
+                        'class'=>'form-control required-input',
+                        'placeholder' => 'Confirmation mot de passe '
+                    ]
+                ])
         ;
     }
 

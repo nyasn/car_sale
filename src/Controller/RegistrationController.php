@@ -72,20 +72,15 @@ class RegistrationController extends BaseController
 
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
-
+        
         if ($form->isSubmitted() && $form->isValid()) {
 
             $event = new FormEvent($form, $request);
-
-            $token = $this->tokenGenerator->generateToken();
-
             $user->setCreatedAt(new \DateTime('now'));
-            $user->setConfirmationToken($token);
-            $user->setEnabled(false);
+            $user->setUpdatedAt(new \DateTime('now'));
+            $user->setEnabled(true);
             $user->setRoles([self::ROLE_USER]);
             $this->userManager->updateUser($user);
-
-            $url = $this->generateUrl('confirmation.compte', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
 
             if (null === $response = $event->getResponse()) {
 
@@ -97,13 +92,13 @@ class RegistrationController extends BaseController
                     'notice_error',
                     $response
                 );
-                return $this->render("fo/auth/register.html.twig",[
+                return $this->render("auth/register.html.twig",[
                     'registrationForm' => $form->createView(),
                     'data'=> $user
                 ]);
             }
         }
-        return $this->render("fo/auth/register.html.twig",[
+        return $this->render("auth/register.html.twig",[
             'registrationForm' => $form->createView()
         ]);
     }
