@@ -72,7 +72,6 @@ class RegistrationController extends BaseController
 
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
-        
         if ($form->isSubmitted() && $form->isValid()) {
             $event = new FormEvent($form, $request);
             $user->setCreatedAt(new \DateTime('now'));

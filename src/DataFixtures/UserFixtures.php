@@ -32,5 +32,17 @@ class UserFixtures extends Fixture
         $user->setPlainPassword('Password123');
         $user->setEnabled(true);
         $this->userManager->updateUser($user);
+
+        $client = $this->userManager->createUser();
+        $client->setUsername('user');
+        $client->setFirstName('Utilisateur');
+        $client->setLastName('User');
+        $client->setPhone('+23453675461223');
+        $client->setAddress('Antananarive');
+        $client->setRoles(array('ROLE_USER'));
+        $client->setEmail('user@neitic.com');
+        $client->setPlainPassword('Password123');
+        $client->setEnabled(true);
+        $this->userManager->updateUser($client);
     }
 }
