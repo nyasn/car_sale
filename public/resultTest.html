@@ -1,0 +1,36 @@
+PHPUnit 7.5.20 by Sebastian Bergmann and contributors.
+
+Testing Project Test Suite
+[41;37mF[0m                                                                   1 / 1 (100%)
+
+Time: 548 ms, Memory: 30.00 MB
+
+There was 1 failure:
+
+1) Tests\Controller\HomeControllerTest::testHomepageIsUp
+Failed asserting that 500 matches expected 200.
+
+/home/alvin/Documents/car_sale/tests/Controller/HomeControllerTest.php:22
+
+[37;41mFAILURES![0m
+[37;41mTests: 1[0m[37;41m, Assertions: 1[0m[37;41m, Failures: 1[0m[37;41m.[0m
+
+Remaining indirect deprecation notices (1)
+
+  1x: The Symfony\Bundle\TwigBundle\Loader\FilesystemLoader class is deprecated since version 4.3 and will be removed in 5.0; use Twig notation for templates instead.
+    1x in HomeControllerTest::setUp from Tests\Controller
+
+Other deprecation notices (4)
+
+  1x: The "templating.locator" service is deprecated since Symfony 4.3 and will be removed in 5.0.
+    1x in HomeControllerTest::testHomepageIsUp from Tests\Controller
+
+  1x: The Symfony\Bundle\FrameworkBundle\Templating\Loader\TemplateLocator class is deprecated since version 4.3 and will be removed in 5.0; use Twig instead.
+    1x in HomeControllerTest::testHomepageIsUp from Tests\Controller
+
+  1x: The "templating.name_parser" service is deprecated since Symfony 4.3 and will be removed in 5.0.
+    1x in HomeControllerTest::testHomepageIsUp from Tests\Controller
+
+  1x: The Symfony\Bundle\FrameworkBundle\Templating\TemplateNameParser class is deprecated since version 4.3 and will be removed in 5.0; use Twig instead.
+    1x in HomeControllerTest::testHomepageIsUp from Tests\Controller
+
