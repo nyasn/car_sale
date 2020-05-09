@@ -30,7 +30,7 @@
 	produit_id: integer
 };
 
----
+-----------------
 
 ** 5 tests unitaire  **
 
@@ -40,4 +40,16 @@
 4- Nouveau Produit
 5- Nouveau Fournisseur
 
+
+----------------
+
+** Accès Admin ****
+identifiant: admin
+mot de passe: Password123
+
+**    Accès Client   **
+identifiant: user
+mot de passe : Password123
+
+---------------
 
