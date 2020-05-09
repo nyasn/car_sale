@@ -1,9 +1,3 @@
-/*
-* jQuery myCart - v1.0 - 2016-04-21
-* http://asraf-uddin-ahmed.github.io/
-* Copyright (c) 2016 Asraf Uddin Ahmed; Licensed None
-*/
-
 (function ($) {
 
   "use strict";
@@ -185,7 +179,7 @@
         '<div class="modal-content">' +
         '<div class="modal-header">' +
         '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
-        '<h4 class="modal-title" id="myModalLabel"><span class="glyphicon glyphicon-shopping-cart"></span> My Cart</h4>' +
+        '<h4 class="modal-title" id="myModalLabel"><span class="glyphicon glyphicon-shopping-cart"></span> Mon Panier</h4>' +
         '</div>' +
         '<div class="modal-body">' +
         '<table class="table table-hover table-responsive" id="' + idCartTable + '"></table>' +
@@ -228,36 +222,27 @@
         '<td><strong id="' + idGrandTotal + '">$</strong></td>' +
         '<td></td>' +
         '</tr>'
-        : '<div class="alert alert-danger" role="alert" id="' + idEmptyCartMessage + '">Your cart is empty</div>'
+        : '<div class="alert alert-danger" role="alert" id="' + idEmptyCartMessage + '">Votre panier est vide !</div>'
       );
 
       var discountPrice = options.getDiscountPrice(products, ProductManager.getTotalPrice(), ProductManager.getTotalQuantity());
-      if(products.length && discountPrice !== null) {
-        $cartTable.append(
-          '<tr style="color: red">' +
-          '<td></td>' +
-          '<td><strong>Total (including discount)</strong></td>' +
-          '<td></td>' +
-          '<td></td>' +
-          '<td><strong id="' + idDiscountPrice + '">$</strong></td>' +
-          '<td></td>' +
-          '</tr>'
-        );
-      }
-
+      
       showGrandTotal();
       showDiscountPrice();
     }
+
     var showModal = function(){
       drawTable();
       $("#" + idCartModal).modal('show');
     }
+
     var updateCart = function(){
       $.each($("." + classProductQuantity), function(){
         var id = $(this).closest("tr").data("id");
         ProductManager.updatePoduct(id, $(this).val());
       });
     }
+
     var showGrandTotal = function(){
       $("#" + idGrandTotal).text("$" + ProductManager.getTotalPrice());
     }

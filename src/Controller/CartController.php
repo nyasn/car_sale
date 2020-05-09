@@ -39,8 +39,6 @@ class CartController extends AbstractController
      */
     public function index(Request $request)
     {
-        $cart = $this->session->get('product');
-        dd('$cart =>', $cart);
         return $this->render('fo/cart/index.html.twig');
     }
 

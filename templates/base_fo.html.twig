@@ -1,22 +1,23 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Home | Car Sale</title>
-		<!-- for-mobile-apps -->
+		<title>{% block title %} Home | Car Sale {% endblock %}</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta property="og:title" content="Vide" />
 		<meta name="keywords" content="Car Sale" />
-		<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
-		function hideURLbar(){ window.scrollTo(0,1); } </script>
-		<!-- //for-mobile-apps -->
+		<script type="application/x-javascript"> 
+			addEventListener("load", function() { 
+				setTimeout(hideURLbar, 0); 
+			}, false);
+			function hideURLbar(){ 
+				window.scrollTo(0,1); 
+			} 
+		</script>
 		<link href="{{ asset('/assets/fo/css/bootstrap.css') }}" rel='stylesheet' type='text/css' />
-		<!-- Custom Theme files -->
+		<link rel="stylesheet" type="text/css" href="{{  asset('assets/fo/css/bootstrap-4.min.css') }}" />
 		<link href="{{ asset('/assets/fo/css/style.css') }}" rel='stylesheet' type='text/css' />
-		<!-- js -->
 		<script src="{{ asset('/assets/fo/js/jquery-1.11.1.min.js') }}"></script>
-		<!-- //js -->
-		<!-- start-smoth-scrolling -->
 		<script type="text/javascript" src="{{ asset('/assets/fo/js/move-top.js') }}"></script>
 		<script type="text/javascript" src="{{ asset('/assets/fo/js/easing.js') }}"></script>
 		<script type="text/javascript">
@@ -27,11 +28,10 @@
 				});
 			});
 		</script>
-		<!-- start-smoth-scrolling -->
 		<link href="{{ asset('/assets/fo/css/font-awesome.css') }}" rel="stylesheet"> 
 		<link href='//fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
 		<link href='//fonts.googleapis.com/css?family=Noto+Sans:400,700' rel='stylesheet' type='text/css'>
-		<!--- start-rate---->
+		
 		<script src="{{ asset('/assets/fo/js/jstarbox.js') }}"></script>
 		<link rel="stylesheet" href="{{ asset('/assets/fo/css/jstarbox.css') }}" type="text/css" media="screen" charset="utf-8" />
 		<script type="text/javascript">
@@ -55,82 +55,110 @@
 			});
 		});
 		</script>
-	<!---//End-rate-->
 
 	</head>
 	<body>
 		{% block header %}
-		{{ include('header_fo.html.twig') }}
+			{{ include('components//header_fo.html.twig') }}
 		{% endblock %}
 		<script>
 			window.jQuery 
 			|| document.write('<script src="{{ asset('/assets/fo/js/vendor/jquery-1.11.1.min.js') }}"><\/script>')
 		</script>
 		<script src="{{ asset('/assets/fo/js/jquery.vide.min.js') }}"></script>
+		{% for message in app.flashes('notice_error') %}
+          <input type="hidden" id="notice_error" value="{{ message }}" />
+        {% endfor %}
+        {% for message in app.flashes('notice_success') %}
+          <input type="hidden" id="notice_success" value="{{ message }}" />
+        {% endfor %}
+        {% for message in app.flashes('notice_warning') %}
+          <input type="hidden" id="notice_warning" value="{{ message }}" />
+        {% endfor %}
+		
 		{% block body %}
 
 		{% endblock %}
 
 		{% block footer %}
-		{{ include('footer_fo.html.twig') }}
+			{{ include('components//footer_fo.html.twig') }}
 		{% endblock %}
-	<!-- smooth scrolling -->
 		<script type="text/javascript">
-			$(document).ready(function() {
-			/*
-				var defaults = {
-				containerID: 'toTop', // fading element id
-				containerHoverID: 'toTopHover', // fading element hover id
-				scrollSpeed: 1200,
-				easingType: 'linear' 
-				};
-			*/								
-			$().UItoTop({ easingType: 'easeOutQuart' });
+			$(document).ready(function() {								
+				$().UItoTop({ easingType: 'easeOutQuart' });
 			});
 		</script>
 		<a href="#" id="toTop" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a>
-	<!-- //smooth scrolling -->
-	<!-- for bootstrap working -->
 		<script src="{{ asset('/assets/fo/js/bootstrap.js') }}"></script>
-	<!-- //for bootstrap working -->
 		<script type='text/javascript' src="{{ asset('/assets/fo/js/jquery.mycart.js') }}"></script>
+		 <script type="text/javascript" src="{{ asset('assets/fo/js/sweetalert2.min.js') }}"></script>
 		<script type="text/javascript">
-		$(function () {
-			var goToCartIcon = function($addTocartBtn){
-				var $cartIcon = $(".my-cart-icon");
-				var $image = $('<img width="30px" height="30px" src="' + $addTocartBtn.data("image") + '"/>').css({"position": "fixed", "z-index": "999"});
-				$addTocartBtn.prepend($image);
-				var position = $cartIcon.position();
-				$image.animate({
-					top: position.top,
-					left: position.left
-				}, 500 , "linear", function() {
-					$image.remove();
+			$(function() {
+				const Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 3000
 				});
-			}
 
-			$('.my-cart-btn').myCart({
-				classCartIcon: 'my-cart-icon',
-				classCartBadge: 'my-cart-badge',
-				affixCartIcon: true,
-				checkoutCart: function(products) {
-					$.each(products, function(){
-					console.log(this);
-					});
-				},
-				clickOnAddToCart: function($addTocart){
-					goToCartIcon($addTocart);
-				},
-				getDiscountPrice: function(products) {
-					var total = 0;
-					$.each(products, function(){
-					total += this.quantity * this.price;
-					});
-					return total * 1;
+				const flasherror = $('#notice_error').val();
+				const flashsuccess = $('#notice_success').val();
+				const flashwarning = $('#notice_warning').val();
+
+				if(flasherror){
+					flash_notice('error', flasherror);
+				}
+				if(flashsuccess){
+					flash_notice('success', flashsuccess);
+				}
+				if(flashwarning){
+					flash_notice('warning', flashwarning);
+				}
+
+				function flash_notice(type, message) {
+					Toast.fire({
+						type: type,
+						title: message
+					})
 				}
 			});
+		</script>
+		<script type="text/javascript">
+			$(function () {
+				var goToCartIcon = function($addTocartBtn){
+					var $cartIcon = $(".my-cart-icon");
+					var $image = $('<img width="30px" height="30px" src="' + $addTocartBtn.data("image") + '"/>').css({"position": "fixed", "z-index": "999"});
+					$addTocartBtn.prepend($image);
+					var position = $cartIcon.position();
+					$image.animate({
+						top: position.top,
+						left: position.left
+					}, 500 , "linear", function() {
+						$image.remove();
+					});
+				}
 
-		});
+				$('.my-cart-btn').myCart({
+					classCartIcon: 'my-cart-icon',
+					classCartBadge: 'my-cart-badge',
+					affixCartIcon: true,
+					checkoutCart: function(products) {
+						$.each(products, function(){
+						console.log(this);
+						});
+					},
+					clickOnAddToCart: function($addTocart){
+						goToCartIcon($addTocart);
+					},
+					getDiscountPrice: function(products) {
+						var total = 0;
+						$.each(products, function(){
+						total += this.quantity * this.price;
+						});
+						return total * 1;
+					}
+				});
+			});
 		</script>			
 	</body>
 </html>

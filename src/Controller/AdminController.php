@@ -21,11 +21,15 @@ class AdminController extends AbstractController
      */
     public function index(CommandeRepository $commandeRepository)
     {
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('home');
+        }
         $data = $commandeRepository->getAllcommande();
         return $this->render('admin/order_manage.html.twig', [
             'name' => 'AdminController',
             'commandes'=>$data
         ]);
+        
     }
 
     /**
@@ -35,6 +39,9 @@ class AdminController extends AbstractController
      */
     public function fournisseur(FournisseurRepository $fournisseurRepository)
     {
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('home');
+        }
         $data = $fournisseurRepository->findAll();
         return $this->render('admin/provider.html.twig', [
             'name' => 'Les fournisseurs',
@@ -128,6 +135,9 @@ class AdminController extends AbstractController
      */
     public function produit(FournisseurRepository $fournisseurRepository,ProduitRepository $produitRepository)
     {
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('home');
+        }
         $data =$produitRepository->findAllProduct();
         $data_f = $fournisseurRepository->findAll();
         return $this->render('admin/product.html.twig', [
@@ -233,8 +243,14 @@ class AdminController extends AbstractController
      */
     public function stock()
     {
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('home');
+        }
         return $this->render('admin/stock.html.twig', [
             'name' => 'Les stock',
         ]);
     }
+
+
+    
 }

@@ -1,5 +1,5 @@
 {% extends 'base_fo.html.twig' %}
-{% block title %}Cart!{% endblock %}
+{% block title %} Commander | Car {% endblock %}
 
 {% block body %}
    <!--banner-->
@@ -10,93 +10,317 @@
 		<div class="clearfix"> </div>
 	</div>
 </div>
-
 <div class="check-out">	 
-    <div class="container">	 
-	    <div class="spec ">
-            <h3>List Commande</h3>
-            <div class="ser-t">
-                <b></b>
-                <span><i></i></span>
-                <b class="line"></b>
-            </div>
-        </div>
-        <script>$(document).ready(function(c) {
-            $('.close1').on('click', function(c){
-                $('.cross').fadeOut('slow', function(c){
-                    $('.cross').remove();
-                });
-                });	  
-            });
-        </script>
-        <script>$(document).ready(function(c) {
-            $('.close2').on('click', function(c){
-                $('.cross1').fadeOut('slow', function(c){
-                    $('.cross1').remove();
-                });
-                });	  
-            });
-        </script>	
-        <script>$(document).ready(function(c) {
-            $('.close3').on('click', function(c){
-                $('.cross2').fadeOut('slow', function(c){
-                    $('.cross2').remove();
-                });
-                });	  
-            });
-        </script>	
-        <table class="table ">
-            <tr>
-                <th class="t-head head-it ">Products</th>
-                <th class="t-head">Price</th>
-                <th class="t-head">Quantity</th>
-            </tr>
-            <tr class="cross2">
-                <td class="t-data ring-in"><a href="#" class="at-in"><img src="{{ asset('/assets/fo/images/vp1.jpg') }}" class="img-responsive" width="100px" alt=""></a>
-                    <div class="sed">
-                        <h5>Sed ut perspiciatis unde</h5>
-                    </div>
-                    <div class="clearfix"> </div>
-                    <div class="close3"> 
-                        <i class="fa fa-times" aria-hidden="true"></i>
-                    </div>
-                </td>
-                <td class="t-data">$15.00</td>
-                <td class="t-data">
-                    <div class="quantity"> 
-                        <div class="quantity-select">            
-                            <div class="entry value-minus">&nbsp;</div>
-                                <div class="entry value"><span class="span-1">1</span></div>									
-                            <div class="entry value-plus active">&nbsp;</div>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        </table>
+  <div class="container">	 
+    <div class="spec ">
+      <h3>Liste de Commande</h3>
+      <div class="ser-t">
+        <b></b>
+        <span><i></i></span>
+        <b class="line"></b>
+      </div>
+    </div>	
+    <table class="table table-hover table-responsive" id="table-commander">
+      <tr>
+        <th class="t-head head-it ">Products</th>
+        <th class="t-head">Price</th>
+        <th class="t-head">Quantity</th>
+      </tr>
+    </table>
+    <div class="spec ">
+        <button type="button" class="btn btn-default valider_commander">Valider votre commande</button>
     </div>
-</div> 				
-<!--quantity-->
-<script>
-    getAllProducts();
-    $('.value-plus').on('click', function(){
-        var divUpd = $(this).parent().find('.value'), newVal = parseInt(divUpd.text(), 10)+1;
-        divUpd.text(newVal);
+  </div>
+</div> 	
+
+
+<script type="text/javascript">
+    var idCartModal = 'my-cart-modal';
+    var idCartTable = 'table-commander';
+    var idGrandTotal = 'my-cart-grand-total';
+    var idEmptyCartMessage = 'my-cart-empty-message';
+    var idDiscountPrice = 'my-cart-discount-price';
+    var classProductTotal = 'my-product-total';
+    var classAffixMyCartIcon = 'my-cart-icon-affix';
+    var $cartIcon = $(".my-cart-icon");
+    var $cartBadge = $(".my-cart-badge");
+    var classProductQuantity = 'my-product-quantity';
+    var classProductRemove = 'my-product-remove';
+    var classCheckoutCart = 'my-cart-checkout';
+    var affixCartIcon = true;
+    var showCheckoutModal = true;
+    var clickOnAddToCart = function($addTocart) { };
+    var clickOnCartIcon = function($cartIcon, products, totalPrice, totalQuantity) { };
+    var checkoutCart = function(products, totalPrice, totalQuantity) { };
+    var getDiscountPrice = function(products, totalPrice, totalQuantity) { return null; };
+
+    //$cartBadge.text(ProductManager.getTotalQuantity());
+
+    
+    var drawTable2 = function(){
+      var $cartTable = $("#" + idCartTable);
+      $cartTable.empty();
+
+      var products = ProductManager.getAllProducts();
+      $.each(products, function(){
+        var total = this.quantity * this.price;
+        $cartTable.append(
+            '<tr  title="' + this.summary + '" data-id="' + this.id + '" data-price="' + this.price + '">' +
+            '<td class="t-data ring-in"><a href="#"  class="at-in "><img width="100px" height="100px" src="' + this.image + '" class="img-responsive" alt=""/></a>'+
+            '<div class="sed">'+
+            '<h5>'+ this.name +'</h5>'+
+            '</div>'+
+            '<div class="clearfix"> </div>'+
+            '<div class="close3 '+ classProductRemove +'">'+
+            '<i class="fa fa-times" aria-hidden="true"></i>'+
+            '</div>'+
+            '</td>' +
+            '<td class="t-data">$' + this.price + '</td>' +
+            '<td class="t-data">'+
+            '<input type="number" min="1" style="width: 70px;" class="' + classProductQuantity + '" value="' + this.quantity + '"/>'+
+            '</td>'+
+            '<td class="t-data ' + classProductTotal + '">$' + total + '</td>' +
+            '</tr>'
+        );
+      });
+
+      $cartTable.append(products.length ?
+        '<tr>' +
+        '<td></td>' +
+        '<td><strong>Total</strong></td>' +
+        '<td></td>' +
+        '<td><strong id="' + idGrandTotal + '">$</strong></td>' +
+        '</tr>'
+        : '<div class="alert alert-danger" role="alert" id="' + idEmptyCartMessage + '">Votre panier est vide !</div>'
+      );
+
+      
+
+      var discountPrice = getDiscountPrice(products, ProductManager.getTotalPrice(), ProductManager.getTotalQuantity());
+      
+      showGrandTotal();
+      showDiscountPrice();
+    }
+
+    var updateCart = function(){
+      $.each($("." + classProductQuantity), function(){
+        var id = $(this).closest("tr").data("id");
+        ProductManager.updatePoduct(id, $(this).val());
+      });
+    }
+    var showModal = function(){
+      drawTable();
+      $("#" + idCartModal).modal('show');
+    }
+
+    var showGrandTotal = function(){
+      $("#" + idGrandTotal).text("$" + ProductManager.getTotalPrice());
+    }
+    var showDiscountPrice = function(){
+      $("#" + idDiscountPrice).text("$" + getDiscountPrice(ProductManager.getAllProducts(), ProductManager.getTotalPrice(), ProductManager.getTotalQuantity()));
+    }
+
+    /*
+    EVENT
+    */
+    if(affixCartIcon) {
+      var cartIconBottom = $cartIcon.offset().top * 1 + $cartIcon.css("height").match(/\d+/) * 1;
+      var cartIconPosition = $cartIcon.css('position');
+      $(window).scroll(function () {
+        if ($(window).scrollTop() >= cartIconBottom) {
+          $cartIcon.css('position', 'fixed').css('z-index', '999').addClass(classAffixMyCartIcon);
+        } else {
+          $cartIcon.css('position', cartIconPosition).css('background-color', 'inherit').removeClass(classAffixMyCartIcon);
+        }
+      });
+    }
+
+    $cartIcon.click(function(){
+      showCheckoutModal ? showModal() : clickOnCartIcon($cartIcon, ProductManager.getAllProducts(), ProductManager.getTotalPrice(), ProductManager.getTotalQuantity());
     });
 
-    $('.value-minus').on('click', function(){
-        var divUpd = $(this).parent().find('.value'), newVal = parseInt(divUpd.text(), 10)-1;
-        if(newVal>=1) divUpd.text(newVal);
+    $('.valider_commander').click(function(){
+        var allProduct = ProductManager.getAllProducts()
+        $.ajax({
+          url: '{{ path('add_order') }}',
+          type: "POST",
+          data: {
+            products :allProduct
+            },
+          datatype: 'json',
+          async: true,
+          success: function (response) {
+            localStorage.clear();
+            window.location.href = '{{ path('home') }}';;
+          }
+        })
+    })
+
+
+    $(document).on("input", "." + classProductQuantity, function () {
+      var price = $(this).closest("tr").data("price");
+      var id = $(this).closest("tr").data("id");
+      var quantity = $(this).val();
+
+      $(this).parent("td").next("." + classProductTotal).text("$" + price * quantity);
+      ProductManager.updatePoduct(id, quantity);
+
+      $cartBadge.text(ProductManager.getTotalQuantity());
+      showGrandTotal();
+      showDiscountPrice();
     });
 
+    $(document).on('keypress', "." + classProductQuantity, function(evt){
+      if(evt.keyCode == 38 || evt.keyCode == 40){
+        return ;
+      }
+      evt.preventDefault();
+    });
+
+    $(document).on('click', "." + classProductRemove, function(){
+      var $tr = $(this).closest("tr");
+      var id = $tr.data("id");
+      $tr.hide(500, function(){
+        ProductManager.removeProduct(id);
+        drawTable2();
+        $cartBadge.text(ProductManager.getTotalQuantity());
+      });
+    });
+
+    $("." + classCheckoutCart).click(function(){
+      var products = ProductManager.getAllProducts();
+      if(!products.length) {
+        $("#" + idEmptyCartMessage).fadeTo('fast', 0.5).fadeTo('fast', 1.0);
+        return ;
+      }
+      updateCart();
+      options.checkoutCart(ProductManager.getAllProducts(), ProductManager.getTotalPrice(), ProductManager.getTotalQuantity());
+      ProductManager.clearProduct();
+      $cartBadge.text(ProductManager.getTotalQuantity());
+      $("#" + idCartModal).modal("hide");
+    });
+
+
+    $(function () {
+      drawTable2();
+    });
+
+    var ProductManager = (function(){
+    var objToReturn = {};
+    /*
+    PRIVATE
+    */
+    localStorage.products = localStorage.products ? localStorage.products : "";
+    var getIndexOfProduct = function(id){
+      var productIndex = -1;
+      var products = getAllProducts();
+      $.each(products, function(index, value){
+        if(value.id == id){
+          productIndex = index;
+          return;
+        }
+      });
+      return productIndex;
+    }
+    var setAllProducts = function(products){
+      localStorage.products = JSON.stringify(products);
+    }
+    var addProduct = function(id, name, summary, price, quantity, image) {
+      var products = getAllProducts();
+      products.push({
+        id: id,
+        name: name,
+        summary: summary,
+        price: price,
+        quantity: quantity,
+        image: image
+      });
+      setAllProducts(products);
+    }
+
+    /*
+    PUBLIC
+    */
     var getAllProducts = function(){
       try {
         var products = JSON.parse(localStorage.products);
-        console.log('getAllProducts =>', products)
         return products;
       } catch (e) {
         return [];
       }
     }
-</script>
-<!--quantity-->
+    var updatePoduct = function(id, quantity) {
+      var productIndex = getIndexOfProduct(id);
+      if(productIndex < 0){
+        return false;
+      }
+      var products = getAllProducts();
+      products[productIndex].quantity = typeof quantity === "undefined" ? products[productIndex].quantity * 1 + 1 : quantity;
+      setAllProducts(products);
+      return true;
+    }
+    var setProduct = function(id, name, summary, price, quantity, image) {
+      if(typeof id === "undefined"){
+        console.error("id required")
+        return false;
+      }
+      if(typeof name === "undefined"){
+        console.error("name required")
+        return false;
+      }
+      if(typeof image === "undefined"){
+        console.error("image required")
+        return false;
+      }
+      if(!$.isNumeric(price)){
+        console.error("price is not a number")
+        return false;
+      }
+      if(!$.isNumeric(quantity)) {
+        console.error("quantity is not a number");
+        return false;
+      }
+      summary = typeof summary === "undefined" ? "" : summary;
+
+      if(!updatePoduct(id)){
+        addProduct(id, name, summary, price, quantity, image);
+      }
+    }
+    var clearProduct = function(){
+      setAllProducts([]);
+    }
+    var removeProduct = function(id){
+      var products = getAllProducts();
+      products = $.grep(products, function(value, index) {
+        return value.id != id;
+      });
+      setAllProducts(products);
+    }
+    var getTotalQuantity = function(){
+      var total = 0;
+      var products = getAllProducts();
+      $.each(products, function(index, value){
+        total += value.quantity * 1;
+      });
+      return total;
+    }
+    var getTotalPrice = function(){
+      var products = getAllProducts();
+      var total = 0;
+      $.each(products, function(index, value){
+        total += value.quantity * value.price;
+      });
+      return total;
+    }
+
+    objToReturn.getAllProducts = getAllProducts;
+    objToReturn.updatePoduct = updatePoduct;
+    objToReturn.setProduct = setProduct;
+    objToReturn.clearProduct = clearProduct;
+    objToReturn.removeProduct = removeProduct;
+    objToReturn.getTotalQuantity = getTotalQuantity;
+    objToReturn.getTotalPrice = getTotalPrice;
+    return objToReturn;
+  }());
+</script>	
 {% endblock %}

@@ -13,6 +13,23 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CommandeController extends AbstractController
 {
+
+    /**
+     * UserController constructor.
+     * @param CommandeRepository $commandeRepository
+     * @param ProduitRepository $produitRepository
+     * @param EntityManagerInterface $entityManager
+     */
+    public function __construct(
+        CommandeRepository $commandeRepository,
+        ProduitRepository $produitRepository,
+        EntityManagerInterface $entityManager
+    ) {
+        $this->commandeRepository = $commandeRepository;
+        $this->produitRepository = $produitRepository;
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * @Route("/commande", name="commande")
      */
@@ -26,37 +43,43 @@ class CommandeController extends AbstractController
     /**
      * @Route("/commande/add", name="add_order")
      * @param Request $request
-     * @param EntityManagerInterface $entityManager
      * @return JsonResponse
      * @throws \Exception
      */
-    public function addfournisseur(Request $request,EntityManagerInterface $entityManager,ProduitRepository $produitRepository,CommandeRepository $commandeRepository)
+    public function addfournisseur(Request $request)
     {
-        $produit_id = $request->get("produit_id");
-        $user_id = $request->get("user_id");
-        $quantity = $request->get("quantity");
-        $number =  $this->generate_number();
-        $number_existant = $commandeRepository->findBy(['number_order'=>$number]);
-        $i = 1;
-        while(count($number_existant)>0) {
-            $number = $number.''.$i;
-            $number_existant = $commandeRepository->findBy(['number_order'=>$number]);
-            $i++;
-        }
-        $order = new Commande();
-        $product = $produitRepository->find($produit_id);
-        $user = $entityManager->find($user_id);
-        $order->setNumberOrder($number);
-        $order->setProduit($product);
-        $order->setQuantity($quantity);
-        $order->setUser($user);
-        $order->setCreatedAt(new \DateTime('now'));
-        $entityManager->persist($order);
-        $entityManager->flush();
+
+        $currentUser =  $this->getUser();
+        $products = $request->get('products');
+       if(count($products)>0){
+           foreach($products as $product){
+               $produit_id = $product['id'];
+               $quantity = $product['quantity'];
+               $number =  $this->generate_number();
+               $number_existant = $this->commandeRepository->findBy(['number_order'=>$number]);
+               $i = 1;
+               while(count($number_existant)>0) {
+                   $number = $number.''.$i;
+                   $number_existant = $this->commandeRepository->findBy(['number_order'=>$number]);
+                   $i++;
+               }
+               $order = new Commande();
+               $product = $this->produitRepository->find($produit_id);
+               $order->setNumberOrder($number);
+               $order->setProduit($product);
+               $order->setQuantity($quantity);
+               $order->setUser($currentUser);
+               $order->setCreatedAt(new \DateTime('now'));
+               $this->entityManager->persist($order);
+               $this->entityManager->flush();
+           }
+       }
+        
         $dataReturn = [
             'status' => true,
-            'message' => "Ajout nouvelle commande avec success !",
         ];
+        //$this->addFlash('notice_success', "Votre commande est enregistrée !");
+
         return new JsonResponse($dataReturn);
 
     }
@@ -65,14 +88,12 @@ class CommandeController extends AbstractController
      * @Route("/commande/edit/{id}", name="edit_order")
      * @param $id
      * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @param CommandeRepository $commandeRepository
      * @return JsonResponse
      */
-    public function editfournisseur($id,Request $request,EntityManagerInterface $entityManager,CommandeRepository $commandeRepository)
+    public function editfournisseur($id,Request $request)
     {
         $quantity = $request->get("quantity");
-        $order = $commandeRepository->find($id);
+        $order = $this->commandeRepository->find($id);
         if (!$order){
             $dataReturn = [
                 'status' => false,
@@ -82,7 +103,7 @@ class CommandeController extends AbstractController
         }
 
         $order->setQuantity($quantity);
-        $entityManager->flush();
+        $this->entityManager->flush();
 
         $dataReturn = [
             'status' => true,
@@ -95,13 +116,11 @@ class CommandeController extends AbstractController
     /**
      * @Route("/commande/delete/{id}", name="delete_order")
      * @param $id
-     * @param EntityManagerInterface $entityManager
-     * @param CommandeRepository $commandeRepository
      * @return JsonResponse
      */
-    public function deletefournisseur($id,EntityManagerInterface $entityManager,CommandeRepository $commandeRepository)
+    public function deletefournisseur($id)
     {
-        $order = $commandeRepository->find($id);
+        $order = $this->commandeRepository->find($id);
         if (!$order){
             $dataReturn = [
                 'status' => false,
@@ -109,8 +128,8 @@ class CommandeController extends AbstractController
             ];
             return JsonResponse($dataReturn);
         }
-        $entityManager->remove($order);
-        $entityManager->flush();
+        $this->entityManager->remove($order);
+        $this->entityManager->flush();
         $dataReturn = [
             'status' => true,
             'message' => "Suppression Commandes avec success !",

@@ -1,8 +1,5 @@
 /*--
-Author: W3layouts
-Author URL: http://w3layouts.com
-License: Creative Commons Attribution 3.0 Unported
-License URL: http://creativecommons.org/licenses/by/3.0/
+Author: Alvin MJ Finch
 --*/
 body{
 	margin:0;
@@ -27,6 +24,10 @@ p,label{
 ul{
 	margin:0;
 	padding:0;
+}
+
+li {
+     list-style: none; 
 }
 
 /*--popup--*/
@@ -357,6 +358,13 @@ nav.navbar.navbar-default {
     height: 44px;
 }
 .cart{
+	float: right; 
+	cursor: pointer;
+	margin-top: 11px;
+    width: 9%;
+}
+
+.deconnexion{
 	float: right; 
 	cursor: pointer;
 	margin-top: 11px;
@@ -1776,7 +1784,7 @@ a#myTabDrop1 {
 	padding: 3em ;
 }
 
-.key  input[type="text"] ,.key  input[type="password"]{
+.key  input[type="text"] ,.key  input[type="password"],.key  input[type="email"] ,.key  input[type="tel"] {
     width: 89%;
     padding: 10px 10px;
     font-size: 1em;
@@ -1788,11 +1796,16 @@ a#myTabDrop1 {
     background: none;
 }
 .key i{
-	    float: left;
+    float: left;
     color: #999;
     font-size: 1.1em;
     padding: 13px;
 }
+
+i.fa.fa-envelope {
+    font-size: 1em;
+}
+
 .key {
     background: #fff;
     border: 1px solid #999;

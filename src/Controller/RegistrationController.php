@@ -74,7 +74,6 @@ class RegistrationController extends BaseController
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
-
             $event = new FormEvent($form, $request);
             $user->setCreatedAt(new \DateTime('now'));
             $user->setUpdatedAt(new \DateTime('now'));
@@ -83,7 +82,10 @@ class RegistrationController extends BaseController
             $this->userManager->updateUser($user);
 
             if (null === $response = $event->getResponse()) {
-
+                $this->addFlash(
+                    'notice_success',
+                    'Votre compte est enregistrer avec succès !'
+                );
                 return $this->redirectToRoute('connexion');
             }
 

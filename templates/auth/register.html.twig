@@ -1,72 +1,63 @@
 {% extends 'base_fo.html.twig' %}
-
-{% block title %}{{ 'app.footer.sign_up'|trans }}  | {{ 'app.name_app'|trans }}  {% endblock %}
-
+{% block title %}Register | Car {% endblock %}
 {% block body %}
 
         <!--banner-->
 <div class="banner-top">
 	<div class="container">
-		<h3 >Register</h3>
-		<h4><a href="index.html">Home</a><label>/</label>Register</h4>
+		<h3 >Inscription</h3>
+		<h4><a href="{{ path('home')}}">Accueil</a><label>/</label>Inscription</h4>
 		<div class="clearfix"> </div>
 	</div>
 </div>
 
-<!--login-->
+<!--Register-->
 
-	<div class="login">
-		<div class="main-agileits">
-				<div class="form-w3agile form1">
-					<h3>Register</h3>
-
-					 {{ form_start(registrationForm) }}
-                        <div class="key">
-							<i class="fa fa-user" aria-hidden="true"></i>
-							{{ form_widget(registrationForm.first_name) }}
-							<div class="clearfix"></div>
-						</div>
-                        <div class="key">
-							<i class="fa fa-user" aria-hidden="true"></i>
-							{{ form_widget(registrationForm.last_name) }}
-							<div class="clearfix"></div>
-						</div>
-                        <div class="key">
-							<i class="fa fa-user" aria-hidden="true"></i>
-							{{ form_widget(registrationForm.address) }}
-							<div class="clearfix"></div>
-						</div>
-						<div class="key">
-							<i class="fa fa-user" aria-hidden="true"></i>
-							{{ form_widget(registrationForm.phone) }}
-							<div class="clearfix"></div>
-						</div>
-						<div class="key">
-							<i class="fa fa-user" aria-hidden="true"></i>
-							{{ form_widget(registrationForm.username) }}
-							<div class="clearfix"></div>
-						</div>
-						<div class="key">
-							<i class="fa fa-envelope" aria-hidden="true"></i>
-							{{ form_widget(registrationForm.email) }}
-							<div class="clearfix"></div>
-						</div>
-						<div class="key">
-                            <i class="fa fa-lock" aria-hidden="true"></i>
-							{{ form_row(registrationForm.password) }}
-                            <div class="clearfix"></div>
-						</div>
-						<div class="key">
-                            <i class="fa fa-lock" aria-hidden="true"></i>
-							{{ form_row(registrationForm.plainPassword) }}
-                            <div class="clearfix"></div>
-						</div>
-						<input type="submit" value="Submit">
-					{{ form_end(registrationForm) }}
+<div class="login">
+	<div class="main-agileits">
+		<div class="form-w3agile form1">
+			<h3>Inscription</h3>
+			{{ form_start(registrationForm) }}
+				<div class="key">
+					<i class="fa fa-user" aria-hidden="true"></i>
+					{{ form_row(registrationForm.last_name) }}
+					<div class="clearfix"></div>
+				</div>
+				<div class="key">
+					<i class="fa fa-user" aria-hidden="true"></i>
+					{{ form_row(registrationForm.first_name) }}
+					<div class="clearfix"></div>
+				</div>
+				<div class="key">
+					<i class="fa fa-user" aria-hidden="true"></i>
+					{{ form_row(registrationForm.address) }}
+					<div class="clearfix"></div>
+				</div>
+				<div class="key">
+					<i class="fa fa-user" aria-hidden="true"></i>
+					{{ form_row(registrationForm.phone) }}
+					<div class="clearfix"></div>
+				</div>
+				<div class="key">
+					<i class="fa fa-user" aria-hidden="true"></i>
+					{{ form_row(registrationForm.username) }}
+					<div class="clearfix"></div>
+				</div>
+				<div class="key">
+					<i class="fa fa-envelope" aria-hidden="true"></i>
+					{{ form_row(registrationForm.email) }}
+					<div class="clearfix"></div>
 				</div>
 				
-			</div>
+				<div class="key">
+					{{ form_row(registrationForm.plainPassword) }}
+					<div class="clearfix"></div>
+				</div>
+				<input type="submit" value="Enregistrer">
+			{{ form_end(registrationForm) }}
 		</div>
+	</div>
+</div>
 <!--footer-->
     
 {% endblock %}

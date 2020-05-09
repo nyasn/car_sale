@@ -125,12 +125,6 @@ class UserController extends AbstractController
     {
         $authChecker = $this->container->get('security.authorization_checker');
 
-
-        //////////////////////////////////////////////
-
-
-        /////////////////////////////////////////////
-
         $cookie = new Cookie(
             'connected',
             true,
@@ -142,21 +136,25 @@ class UserController extends AbstractController
         );
 
         if ($authChecker->isGranted('ROLE_ADMIN')) {
-            $response = $this->redirectToRoute('home_admin');
+            $response = $this->redirectToRoute('admin');
             $response->headers->setCookie($cookie);
-
             return $response;
         } elseif ($authChecker->isGranted('ROLE_USER')) {
             $response = $this->redirectToRoute('home');
             $response->headers->setCookie($cookie);
-
             return $response;
         }
         $response = $this->redirectToRoute('home');
         $response->headers->setCookie($cookie);
-
         return $response;
     }
 
+    /**
+     * @Route("/deconnexion", name="logout_path")
+     * @param Request $request
+     */
+    public function logoutAction(Request $request)
+    {
+    }
 
 }
